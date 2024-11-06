@@ -1,0 +1,6 @@
+package consts
+
+const DEFAULT_WINDOW_WIDTH = 800
+const DEFAULT_WINDOW_HEIGHT = 626
+const MIN_WINDOW_WIDTH = 600
+const MIN_WINDOW_HEIGHT = 470
