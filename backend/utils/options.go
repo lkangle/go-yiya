@@ -1,25 +1,47 @@
-package services
+package utils
 
 import (
 	"context"
+	"sync"
 	"yiya-v2/backend/consts"
 	"yiya-v2/backend/storage"
 
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
-type boundaryService struct {
-	bs *storage.BoundaryStorage
+type optionUtils struct {
+	opts *storage.OptionStorage
 }
 
-func Boundary() *boundaryService {
-	return &boundaryService{
-		bs: storage.NewBoundaryStorage(),
+var util *optionUtils
+var oncev sync.Once
+
+func GetOptionUtils() *optionUtils {
+	if util == nil {
+		oncev.Do(func() {
+			util = &optionUtils{
+				opts: storage.NewOptionStorage(),
+			}
+		})
 	}
+
+	return util
 }
 
-func (p *boundaryService) GetWindowSize() (width, height int) {
-	data := p.bs.Get()
+func (p *optionUtils) IsAlwaysOnTop() bool {
+	return p.opts.Get().IsAllowsOnTop
+}
+
+func (p *optionUtils) SaveIsAlwaysOnTop(top bool) {
+	old := p.opts.Get()
+
+	old.IsAllowsOnTop = top
+
+	p.opts.Save(&old)
+}
+
+func (p *optionUtils) GetWindowSize() (width, height int) {
+	data := p.opts.Get()
 	width, height = data.WindowWidth, data.WindowHeight
 	if width <= 0 {
 		width = consts.DEFAULT_WINDOW_WIDTH
@@ -30,8 +52,8 @@ func (p *boundaryService) GetWindowSize() (width, height int) {
 	return
 }
 
-func (p *boundaryService) GetWindowPosition(ctx context.Context) (x, y int) {
-	data := p.bs.Get()
+func (p *optionUtils) GetWindowPosition(ctx context.Context) (x, y int) {
+	data := p.opts.Get()
 	x, y = data.WindowPosX, data.WindowPosY
 	width, height := data.WindowWidth, data.WindowHeight
 	var screenWidth, screenHeight int
@@ -53,8 +75,8 @@ func (p *boundaryService) GetWindowPosition(ctx context.Context) (x, y int) {
 	return
 }
 
-func (p *boundaryService) UpdateBoundary(ctx context.Context) {
-	old := p.bs.Get()
+func (p *optionUtils) UpdateBoundary(ctx context.Context) {
+	old := p.opts.Get()
 
 	width, height := runtime.WindowGetSize(ctx)
 	x, y := runtime.WindowGetPosition(ctx)
@@ -66,5 +88,5 @@ func (p *boundaryService) UpdateBoundary(ctx context.Context) {
 	old.WindowPosX = x
 	old.WindowPosY = y
 
-	p.bs.Save(&old)
+	p.opts.Save(&old)
 }

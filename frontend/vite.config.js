@@ -13,7 +13,8 @@ export default defineConfig({
   resolve: {
     alias: {
       '@wailsjs': path.resolve(__dirname, "wailsjs"),
-      '@assets': path.resolve(__dirname, "src/assets")
+      '@assets': path.resolve(__dirname, "src/assets"),
+      '@utils': path.resolve(__dirname, "src/utils")
     }
   }
 })
