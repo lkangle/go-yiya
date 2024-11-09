@@ -30,24 +30,29 @@ func main() {
 
 	opts := utils.GetOptionUtils()
 	sys := services.System()
+	fsv := services.NewFileService()
 
 	width, height := opts.GetWindowSize()
 
 	// Create application with options
 	err := wails.Run(&options.App{
-		Title:         consts.APP_NAME,
-		Width:         width,
-		Height:        height,
-		MinWidth:      consts.MIN_WINDOW_WIDTH,
-		MinHeight:     consts.MIN_WINDOW_HEIGHT,
-		DisableResize: true,
-		Frameless:     !isMacOS,
-		StartHidden:   true,
-		AlwaysOnTop:   opts.IsAlwaysOnTop(),
+		Title:            consts.APP_NAME,
+		Width:            width,
+		Height:           height,
+		MinWidth:         consts.MIN_WINDOW_WIDTH,
+		MinHeight:        consts.MIN_WINDOW_HEIGHT,
+		DisableResize:    true,
+		Frameless:        !isMacOS,
+		StartHidden:      true,
+		AlwaysOnTop:      opts.IsAlwaysOnTop(),
+		BackgroundColour: options.NewRGBA(0, 0, 0, 0),
+		DragAndDrop: &options.DragAndDrop{
+			EnableFileDrop:     true,
+			DisableWebViewDrop: true,
+		},
 		AssetServer: &assetserver.Options{
 			Assets: assets,
 		},
-		BackgroundColour: &options.RGBA{R: 27, G: 38, B: 54, A: 1},
 		Bind: []interface{}{
 			sys,
 		},
@@ -55,7 +60,9 @@ func main() {
 			x, y := opts.GetWindowPosition(ctx)
 			runtime.WindowSetPosition(ctx, x, y)
 			runtime.WindowShow(ctx)
+
 			sys.Setup(ctx)
+			fsv.Setup(ctx)
 		},
 		OnDomReady: func(ctx context.Context) {},
 		OnBeforeClose: func(ctx context.Context) (prevent bool) {
@@ -71,12 +78,12 @@ func main() {
 				Message: "一个小小的图片处理工具.\n\nCopyright © 2024",
 				Icon:    icon,
 			},
-			WebviewIsTransparent: false,
-			WindowIsTranslucent:  false,
+			WebviewIsTransparent: true,
+			WindowIsTranslucent:  true,
 		},
 		Windows: &windows.Options{
-			WebviewIsTransparent:              false,
-			WindowIsTranslucent:               false,
+			WebviewIsTransparent:              true,
+			WindowIsTranslucent:               true,
 			DisableFramelessWindowDecorations: false,
 		},
 	})

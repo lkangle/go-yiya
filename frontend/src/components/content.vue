@@ -2,12 +2,13 @@
 import { ref } from 'vue';
 import Empty from './empty.vue';
 import List from './list.vue';
+import DragContainer from './drag-container.vue';
 
 let isEmpty = ref(true)
 </script>
 
 <template>
-    <div class="flex-1 min-h-300 bg-[#f8f9fb]">
+    <DragContainer class="flex-1 min-h-300 bg-[#f8f9fb]">
         <template v-if="isEmpty">
             <Empty class="mx-auto mt-115"/>
             <div class="px-40 mt-100">
@@ -20,7 +21,7 @@ let isEmpty = ref(true)
             </footer>
         </template>
         <List v-if="!isEmpty"/>
-    </div>
+    </DragContainer>
 </template>
 
 <style scoped>
