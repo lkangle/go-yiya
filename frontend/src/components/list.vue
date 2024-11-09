@@ -6,7 +6,7 @@ let isEmpty = ref(true)
 </script>
 
 <template>
-    <div :if="isEmpty" class="w-full h-full flex justify-center items-center pb-50">
-        <empty/>
+    <div>
+        这是列表数据
     </div>
 </template>

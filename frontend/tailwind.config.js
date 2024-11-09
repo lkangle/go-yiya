@@ -10,7 +10,7 @@ export default {
   ],
   theme: {
     extend: {
-      spacing: new Array(555).fill(0).reduce((r,_,index) => ({
+      spacing: new Array(600).fill(0).reduce((r,_,index) => ({
         ...r, [index]: `${index}px`
       }), {}),
       fontSize: extendSpacing,

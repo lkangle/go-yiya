@@ -1,9 +1,9 @@
 package consts
 
 const DEFAULT_WINDOW_WIDTH = 380
-const DEFAULT_WINDOW_HEIGHT = 580
+const DEFAULT_WINDOW_HEIGHT = 570
 const MIN_WINDOW_WIDTH = 380
-const MIN_WINDOW_HEIGHT = 580
+const MIN_WINDOW_HEIGHT = 570
 
 const APP_NAME = "易压"
 const APP_VERSION = "0.0.1"
