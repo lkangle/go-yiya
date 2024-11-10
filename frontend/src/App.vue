@@ -12,7 +12,7 @@ import Toolbar from './components/toolbar.vue';
         colorPrimary: '#6366f1',
       },
     }">
-    <div class="layout h-full flex flex-col justify-between">
+    <div class="layout bg-gray-100 h-full flex flex-col justify-between">
       <Toolbar/>
       <Content/>
     </div>

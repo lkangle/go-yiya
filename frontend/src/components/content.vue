@@ -1,21 +1,24 @@
 <script setup>
-import { ref } from 'vue';
+import { computed } from 'vue';
 import Empty from './empty.vue';
 import List from './list/index.vue';
 import DragContainer from './drag-container.vue';
 import { OpenSelectFilesDialog } from '@wailsjs/go/services/fileService';
 import { getAppVersion } from '@utils/platform';
+import useList from '@/store/use-list';
 
-let isEmpty = ref(false)
+const dataList = useList(stat => stat.data)
+const isEmpty = computed(() => dataList.value.length === 0)
 
 const onSelectFiles = async () => {
-    const files = await OpenSelectFilesDialog()
-    console.log(files, 'files...')
+    const resp = await OpenSelectFilesDialog()
+    console.log(resp.data, 'files...')
+    dataList.value.push(...resp.data)
 }
 </script>
 
 <template>
-    <DragContainer class="flex-1 min-h-300 bg-gray-100">
+    <DragContainer class="flex-1 min-h-300">
         <template v-if="isEmpty">
             <Empty class="mx-auto mt-115"/>
             <div class="px-40 mt-100">

@@ -3,16 +3,18 @@ import { range } from '@utils/index';
 import Item from './item.vue';
 import { PlusOutlined } from '@ant-design/icons-vue';
 import Operate from './operate.vue';
+import useList from '@/store/use-list';
 
-
+let clear = useList(stat => stat.clear)
 </script>
 
 <template>
-    <div class="h-full">
-        <Item v-for="(item, index) in range(0, 8)"></Item>
+<div class="h-full flex flex-col">
+    <div class="scrollbar h-full overflow-auto">
+        <Item v-for="(item, index) in range(0, 10)"></Item>
     </div>
 
-    <div class="absolute bottom-0 h-52 w-full bg-[#f8f9fa] border-t-[1px] border-gray-300">
+    <div class="min-h-50 h-50 w-full bg-[#f8f9fa] border-t-[1px] border-gray-300">
         <div class="flex items-center justify-between h-full px-10">
             <a-button type="primary" shape="circle" class="pt-5 flex justify-center items-center">
                 <template #icon>
@@ -27,10 +29,23 @@ import Operate from './operate.vue';
                     <span>(0.00KB)</span>
                 </p>
             </div>
-            <Operate/>
+            <Operate @close="clear"/>
         </div>
     </div>
+</div>
 </template>
 
 <style scoped>
+/* 定义滚动条样式 */
+.scrollbar::-webkit-scrollbar {
+    width: 8px;
+    height: 1px;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+    width: 6px;
+    border-radius: 5px;
+    border: 2px solid #f1f1f1;
+    @apply bg-gray-400 hover:bg-gray-500;
+}
 </style>

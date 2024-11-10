@@ -4,7 +4,8 @@
         "paths": {
             "@wailsjs/*": ["wailsjs/*"],
             "@assets/*": ["src/assets/*"],
-            "@utils/*": ["src/utils/*"]
+            "@utils/*": ["src/utils/*"],
+            "@/*": ["src/*"]
         }
     },
 }

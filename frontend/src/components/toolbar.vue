@@ -23,7 +23,7 @@ const toggleAlwaysTop = () => {
 <template>
 <div
     id="app-toolbar"
-    class="h-38 w-full text-gray-600 bg-gray-100 border-b-[1px] border-gray-300"
+    class="h-38 w-full text-gray-600 border-b-[1px] border-gray-300"
     style="--wails-draggable: drag">
     <div v-if="isWindows()" class="h-full flex items-center justify-between px-8">
         <!-- 置顶和设置按钮 -->
