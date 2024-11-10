@@ -1,4 +1,4 @@
-import { GetAppInfo, GetIsAllowsOnTop } from '@wailsjs/go/services/systimeService'
+import { GetAppInfo, GetIsAlwaysOnTop } from '@wailsjs/go/services/appService'
 import { Environment } from '@wailsjs/runtime/runtime.js'
 
 let os = ''
@@ -8,7 +8,7 @@ let info = {}
 export async function loadEnvironment() {
     const env = await Environment()
     info = await GetAppInfo()
-    info.onTop = await GetIsAllowsOnTop()
+    info.onTop = await GetIsAlwaysOnTop()
     os = env.platform
 }
 
@@ -24,6 +24,6 @@ export function getAppName() {
     return info.name || 'dev'
 }
 
-export function isAllowsOnTop() {
+export function isAlwaysOnTop() {
     return info?.onTop || false
 }

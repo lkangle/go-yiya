@@ -9,22 +9,22 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-type OptionStorage struct {
+type OptionsStorage struct {
 	storage *localStorage
 	mutex   sync.Mutex
-	option  *types.SystemOptions
+	option  *types.AppOptions
 }
 
-func NewOptionStorage() *OptionStorage {
+func NewOptionStorage() *OptionsStorage {
 	storage := NewLocalStore("options.yaml")
 	log.Printf("[options path]: %s\n", storage.ConfPath)
-	return &OptionStorage{
+	return &OptionsStorage{
 		storage: storage,
 		option:  nil,
 	}
 }
 
-func (p *OptionStorage) get() (ret types.SystemOptions) {
+func (p *OptionsStorage) get() (ret types.AppOptions) {
 	ret = p.Default()
 	b, err := p.storage.Load()
 	if err != nil {
@@ -38,7 +38,7 @@ func (p *OptionStorage) get() (ret types.SystemOptions) {
 	return
 }
 
-func (p *OptionStorage) save(pf *types.SystemOptions) error {
+func (p *OptionsStorage) save(pf *types.AppOptions) error {
 	b, err := yaml.Marshal(pf)
 	if err != nil {
 		return err
@@ -50,27 +50,34 @@ func (p *OptionStorage) save(pf *types.SystemOptions) error {
 	return nil
 }
 
-func (p *OptionStorage) Get() (ret types.SystemOptions) {
+func (p *OptionsStorage) Get() (ret types.AppOptions) {
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
 
 	ret = p.get()
-	ret.WindowWidth = max(ret.WindowWidth, consts.MIN_WINDOW_WIDTH)
-	ret.WindowHeight = max(ret.WindowHeight, consts.MIN_WINDOW_HEIGHT)
+	ret.System.WindowWidth = max(ret.System.WindowWidth, consts.MIN_WINDOW_WIDTH)
+	ret.System.WindowHeight = max(ret.System.WindowHeight, consts.MIN_WINDOW_HEIGHT)
 	return
 }
 
-func (p *OptionStorage) Save(pf *types.SystemOptions) error {
+func (p *OptionsStorage) Save(pf *types.AppOptions) error {
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
 
 	return p.save(pf)
 }
 
-func (p *OptionStorage) Default() types.SystemOptions {
-	return types.SystemOptions{
-		WindowWidth:   consts.DEFAULT_WINDOW_WIDTH,
-		WindowHeight:  consts.DEFAULT_WINDOW_HEIGHT,
-		IsAllowsOnTop: false,
+func (p *OptionsStorage) Default() types.AppOptions {
+	return types.AppOptions{
+		System: types.SystemOptions{
+			WindowWidth:   consts.DEFAULT_WINDOW_WIDTH,
+			WindowHeight:  consts.DEFAULT_WINDOW_HEIGHT,
+			IsAlwaysOnTop: false,
+		},
+		Compress: types.CompressOptions{
+			Quality:   consts.BEST_QUALITY,
+			Override:  true,
+			NewSuffix: "yiya",
+		},
 	}
 }

@@ -1,21 +1,21 @@
 <script setup>
 import { PushpinOutlined, SettingFilled, PushpinFilled, SettingOutlined, MinusOutlined, CloseOutlined} from '@ant-design/icons-vue'
-import { getAppName, isAllowsOnTop, isWindows } from '@utils/platform';
-import { SetIsAllowsOnTop } from '@wailsjs/go/services/systimeService';
+import { getAppName, isAlwaysOnTop, isWindows } from '@utils/platform';
+import { SetIsAlwaysOnTop } from '@wailsjs/go/services/appService';
 import { WindowMinimise, Quit } from '@wailsjs/runtime/runtime';
 import { ref } from 'vue';
 
 const title = ref(getAppName())
-const allowsTop = ref(isAllowsOnTop())
+const alwaysTop = ref(isAlwaysOnTop())
 
-const toggleAllowsTop = () => {
-    if (allowsTop.value) {
-        allowsTop.value = false
+const toggleAlwaysTop = () => {
+    if (alwaysTop.value) {
+        alwaysTop.value = false
     } else{
-        allowsTop.value = true
+        alwaysTop.value = true
     }
 
-    SetIsAllowsOnTop(allowsTop.value)
+    SetIsAlwaysOnTop(alwaysTop.value)
 }
 </script>
 
@@ -27,10 +27,10 @@ const toggleAllowsTop = () => {
     <div v-if="isWindows()" class="h-full flex items-center justify-between px-8">
         <!-- 置顶和设置按钮 -->
         <div class="flex space-x-3">
-            <div @click="toggleAllowsTop" :class="['bar-icon', {
-                actived: allowsTop
+            <div @click="toggleAlwaysTop" :class="['bar-icon', {
+                actived: alwaysTop
             }]">
-                <PushpinOutlined :class="{ '-rotate-45': allowsTop}"/>
+                <PushpinOutlined :class="{ '-rotate-45': alwaysTop}"/>
             </div>
             <div class="bar-icon">
                 <SettingOutlined />
@@ -52,10 +52,10 @@ const toggleAllowsTop = () => {
         <h3>{{ title }}</h3>
         <!-- 置顶和设置按钮 -->
         <div class="flex space-x-3 absolute right-8">
-            <div @click="toggleAllowsTop" :class="['bar-icon', {
-                actived: allowsTop
+            <div @click="toggleAlwaysTop" :class="['bar-icon', {
+                actived: alwaysTop
             }]">
-                <PushpinFilled :class="{ '-rotate-45': allowsTop}"/>
+                <PushpinFilled :class="{ '-rotate-45': alwaysTop}"/>
             </div>
             <div class="bar-icon">
                 <SettingFilled />

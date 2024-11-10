@@ -4,10 +4,8 @@ import (
 	"context"
 	"embed"
 	"fmt"
-	"log"
 	"yiya-v2/backend/consts"
 	"yiya-v2/backend/services"
-	"yiya-v2/backend/utils"
 
 	goruntime "runtime"
 
@@ -28,11 +26,10 @@ var icon []byte
 func main() {
 	isMacOS := goruntime.GOOS == "darwin"
 
-	opts := utils.GetOptionUtils()
-	sys := services.System()
-	fsv := services.NewFileService()
+	app := services.AppService()
+	fsv := services.FileService()
 
-	width, height := opts.GetWindowSize()
+	width, height := app.GetWindowSize()
 
 	// Create application with options
 	err := wails.Run(&options.App{
@@ -44,7 +41,7 @@ func main() {
 		DisableResize:    true,
 		Frameless:        !isMacOS,
 		StartHidden:      true,
-		AlwaysOnTop:      opts.IsAlwaysOnTop(),
+		AlwaysOnTop:      app.GetIsAlwaysOnTop(),
 		BackgroundColour: options.NewRGBA(0, 0, 0, 0),
 		DragAndDrop: &options.DragAndDrop{
 			EnableFileDrop:     true,
@@ -54,21 +51,20 @@ func main() {
 			Assets: assets,
 		},
 		Bind: []interface{}{
-			sys,
+			app,
+			fsv,
 		},
 		OnStartup: func(ctx context.Context) {
-			x, y := opts.GetWindowPosition(ctx)
+			app.Setup(ctx)
+			fsv.Setup(ctx)
+
+			x, y := app.GetLocalPosition()
 			runtime.WindowSetPosition(ctx, x, y)
 			runtime.WindowShow(ctx)
-
-			sys.Setup(ctx)
-			fsv.Setup(ctx)
 		},
 		OnDomReady: func(ctx context.Context) {},
 		OnBeforeClose: func(ctx context.Context) (prevent bool) {
-			opts.UpdateBoundary(ctx)
-
-			log.Fatalln("==> ...这里还关闭了...")
+			app.SaveBoundary()
 			return false
 		},
 		Mac: &mac.Options{

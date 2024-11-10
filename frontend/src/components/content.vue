@@ -3,8 +3,15 @@ import { ref } from 'vue';
 import Empty from './empty.vue';
 import List from './list.vue';
 import DragContainer from './drag-container.vue';
+import { OpenSelectFilesDialog } from '@wailsjs/go/services/fileService';
 
 let isEmpty = ref(true)
+
+const onSelectFiles = async () => {
+    const files = await OpenSelectFilesDialog()
+    console.log(files, 'files...')
+}
+
 </script>
 
 <template>
@@ -12,7 +19,7 @@ let isEmpty = ref(true)
         <template v-if="isEmpty">
             <Empty class="mx-auto mt-115"/>
             <div class="px-40 mt-100">
-                <button class="btn-indigo w-full">
+                <button @click="onSelectFiles" class="btn-indigo w-full">
                     选择图片  
                 </button>
             </div>

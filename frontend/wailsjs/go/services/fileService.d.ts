@@ -3,10 +3,8 @@
 import {types} from '../models';
 import {context} from '../models';
 
-export function GetAppInfo():Promise<types.JsObject>;
+export function CompressImages(arg1:Array<string>,arg2:types.CompressOptions):Promise<types.JSResp>;
 
-export function GetIsAllowsOnTop():Promise<boolean>;
-
-export function SetIsAllowsOnTop(arg1:boolean):Promise<void>;
+export function OpenSelectFilesDialog():Promise<types.JSResp>;
 
 export function Setup(arg1:context.Context):Promise<void>;
