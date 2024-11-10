@@ -2,7 +2,6 @@ import { GetAppInfo, GetIsAlwaysOnTop } from '@wailsjs/go/services/appService'
 import { Environment } from '@wailsjs/runtime/runtime.js'
 
 let os = ''
-
 let info = {}
 
 export async function loadEnvironment() {

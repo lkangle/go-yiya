@@ -4,6 +4,7 @@ import { getAppName, isAlwaysOnTop, isWindows } from '@utils/platform';
 import { SetIsAlwaysOnTop } from '@wailsjs/go/services/appService';
 import { WindowMinimise, Quit } from '@wailsjs/runtime/runtime';
 import { ref } from 'vue';
+import Settings from './settings.vue';
 
 const title = ref(getAppName())
 const alwaysTop = ref(isAlwaysOnTop())
@@ -32,9 +33,9 @@ const toggleAlwaysTop = () => {
             }]">
                 <PushpinOutlined :class="{ '-rotate-45': alwaysTop}"/>
             </div>
-            <div class="bar-icon">
+            <Settings class="bar-icon">
                 <SettingOutlined />
-            </div>
+            </Settings>
         </div>
         <h3>{{ title }}</h3>
         <!-- window的关闭按钮 -->
@@ -57,9 +58,9 @@ const toggleAlwaysTop = () => {
             }]">
                 <PushpinFilled :class="{ '-rotate-45': alwaysTop}"/>
             </div>
-            <div class="bar-icon">
+            <Settings class="bar-icon">
                 <SettingFilled />
-            </div>
+            </Settings>
         </div>
     </div>
 </div>

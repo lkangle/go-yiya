@@ -132,6 +132,7 @@ func (p *appService) UpdateCompressOptions(op types.CompressOptions) (resp types
 
 	old.Compress = oc
 
+	p.opt.Save(&old)
 	resp.Success = true
 	return
 }

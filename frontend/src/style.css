@@ -11,3 +11,8 @@ html, body, #app {
 * {
     user-select: none;
 }
+
+.ant-modal-wrap,
+.ant-modal-mask {
+    top: 38px !important;
+}
