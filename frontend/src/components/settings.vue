@@ -35,7 +35,7 @@ const toggle = () => {
     <div @click="toggle">
         <slot/>
         <Modal title="配置" width="280px" v-model:open="isOpen" :footer="null">
-            <div class="text-gray-700 pt-5">
+            <div class="pt-5">
                 <div class="mb-12 flex items-center justify-between">
                     <div class="w-85 pr-10 whitespace-nowrap">
                         <span>覆盖原文件:</span>
@@ -49,7 +49,7 @@ const toggle = () => {
                         <span>新文件后缀:</span>
                     </div>
                     <div class="flex-1">
-                        <a-input autocomplete="off" v-model:value="data.newSuffix" />
+                        <a-input :disabled="data.override" autocomplete="off" v-model:value="data.newSuffix" />
                     </div>
                 </div>
                 <div class="mb-15 flex items-center justify-between">

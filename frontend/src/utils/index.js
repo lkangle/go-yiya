@@ -8,3 +8,7 @@ export function debounce(fn, delay) {
         }, delay)
     }
 }
+
+export function range(start, end) {
+    return new Array(end-start).fill(0).map((_, index) => index+start)
+}
