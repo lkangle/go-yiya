@@ -37,7 +37,7 @@ func (s *appService) Setup(ctx context.Context) {
 func (s *appService) GetAppInfo() types.JsObject {
 	return map[string]any{
 		"name":    consts.APP_NAME,
-		"varsion": consts.APP_VERSION,
+		"version": consts.APP_VERSION,
 	}
 }
 

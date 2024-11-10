@@ -4,6 +4,7 @@ import Empty from './empty.vue';
 import List from './list.vue';
 import DragContainer from './drag-container.vue';
 import { OpenSelectFilesDialog } from '@wailsjs/go/services/fileService';
+import { getAppVersion } from '@utils/platform';
 
 let isEmpty = ref(true)
 
@@ -25,6 +26,7 @@ const onSelectFiles = async () => {
             </div>
             <footer class="text-11 text-center text-gray-400 mt-50">
                 <p>Oh. Work-Life Balance</p>
+                <p class="text-10">© 2024. v{{ getAppVersion() }} </p>
             </footer>
         </template>
         <List v-if="!isEmpty"/>

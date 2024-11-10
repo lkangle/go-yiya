@@ -23,6 +23,10 @@ export function getAppName() {
     return info.name || 'dev'
 }
 
+export function getAppVersion() {
+    return info.version || '0.0.0'
+}
+
 export function isAlwaysOnTop() {
     return info?.onTop || false
 }
