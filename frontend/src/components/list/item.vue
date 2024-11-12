@@ -2,6 +2,9 @@
 import { ArrowRightOutlined } from '@ant-design/icons-vue';
 import Operate from './operate.vue';
 
+const props = defineProps(['item'])
+
+console.log('props', props)
 </script>
 
 <template>

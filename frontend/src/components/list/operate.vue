@@ -1,6 +1,6 @@
 <script setup>
 import { UndoOutlined, RedoOutlined, CloseOutlined, FolderOpenOutlined } from '@ant-design/icons-vue';
-import { ref, defineProps } from 'vue';
+import { ref } from 'vue';
 
 const props = defineProps(['class', 'isItem'])
 const emit = defineEmits(["undo", "redo", "openfolder", "close"])

@@ -1,16 +1,5 @@
 <script setup>
-import { EventsOn, OnFileDrop } from '@wailsjs/runtime/runtime';
 import { ref } from 'vue';
-
-// 这里只做拖拽的样式处理，文件交给wails处理
-
-OnFileDrop((x,y,paths) => {
-    console.log(x, y, paths)
-})
-
-EventsOn("file_handler_finish", data => {
-    console.log("...data", data)
-})
 
 const over = ref(false)
 

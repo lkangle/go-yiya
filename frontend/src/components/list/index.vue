@@ -5,13 +5,13 @@ import { PlusOutlined } from '@ant-design/icons-vue';
 import Operate from './operate.vue';
 import useList from '@/store/use-list';
 
-let clear = useList(stat => stat.clear)
+const clear = useList(stat => stat.clear)
 </script>
 
 <template>
 <div class="h-full flex flex-col">
     <div class="scrollbar h-full overflow-auto">
-        <Item v-for="(item, index) in range(0, 10)"></Item>
+        <Item v-for="(item, index) in range(0, 10)" :key="index" :item="item"/>
     </div>
 
     <div class="min-h-50 h-50 w-full bg-[#f8f9fa] border-t-[1px] border-gray-300">

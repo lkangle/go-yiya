@@ -70,7 +70,7 @@ func main() {
 		Mac: &mac.Options{
 			TitleBar: mac.TitleBarHiddenInset(),
 			About: &mac.AboutInfo{
-				Title:   fmt.Sprintf("%s %s", consts.APP_NAME, consts.APP_VERSION),
+				Title:   fmt.Sprintf("%s v%s", consts.APP_NAME, consts.APP_VERSION),
 				Message: "一个小小的图片处理工具.\n\nCopyright © 2024",
 				Icon:    icon,
 			},

@@ -1,6 +1,6 @@
 {
   "$schema": "https://wails.io/schemas/config.v2.json",
-  "name": "yiya",
+  "name": "YiYa",
   "outputfilename": "yiya",
   "frontend:install": "npm install",
   "frontend:build": "npm run build",
