@@ -1,9 +1,7 @@
 <script setup>
-import { ArrowRightOutlined } from '@ant-design/icons-vue';
-import Operate from './operate.vue';
+import { ArrowRightOutlined, FolderOpenOutlined, ReadOutlined } from '@ant-design/icons-vue';
 
 const props = defineProps(['item'])
-
 console.log('props', props)
 </script>
 
@@ -27,7 +25,18 @@ console.log('props', props)
                 <span>等待压缩</span>
             </p> -->
         </div>
-        <Operate class="scale-75 -mr-10" :is-item="true"/>
+        <div class="flex space-x-2 scale-75 -mr-10">
+          <a-button type="text" disabled shape="circle" class="flex justify-center items-center">
+              <template #icon>
+                  <ReadOutlined class="text-15 text-gray-500" />
+              </template>
+          </a-button>
+          <a-button type="text" shape="circle" class="flex justify-center items-center">
+              <template #icon>
+                  <FolderOpenOutlined class="text-15 text-gray-500" />
+              </template>
+          </a-button>
+        </div>
     </div>
 </template>
 
