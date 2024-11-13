@@ -60,9 +60,11 @@ func main() {
 
 			x, y := app.GetLocalPosition()
 			runtime.WindowSetPosition(ctx, x, y)
+		},
+		OnDomReady: func(ctx context.Context) {
+			// TODO: 拆包,ssg优化 首页加载速度
 			runtime.WindowShow(ctx)
 		},
-		OnDomReady: func(ctx context.Context) {},
 		OnBeforeClose: func(ctx context.Context) (prevent bool) {
 			app.SaveBoundary()
 			return false
