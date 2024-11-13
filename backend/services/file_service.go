@@ -3,6 +3,7 @@ package services
 import (
 	"sync"
 	"yiya-v2/backend/types"
+	"yiya-v2/backend/utils"
 
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 	"golang.org/x/net/context"
@@ -51,7 +52,10 @@ func (fs *fileService) OpenSelectFilesDialog() (resp types.JSResp) {
 		return
 	}
 
-	resp.Data = fileList
+	fileInfos := utils.Map(fileList, func(path string) types.ImageFileInfo {
+		return utils.GetBaseInfo(path)
+	})
+	resp.Data = fileInfos
 	resp.Success = true
 	return
 }
@@ -60,4 +64,8 @@ func (fs *fileService) CompressImages(paths []string, opt types.CompressOptions)
 
 	resp.Success = true
 	return
+}
+
+func (fs *fileService) GetBaseInfo(path string) types.ImageFileInfo {
+	return utils.GetBaseInfo(path)
 }

@@ -1,17 +1,18 @@
 <script setup>
-import { range } from '@utils/index';
 import Item from './item.vue';
 import { PlusOutlined } from '@ant-design/icons-vue';
 import Operate from './operate.vue';
 import useList from '@/store/use-list';
 
 const clear = useList(stat => stat.clear)
+const itemList = useList(stat => stat.data)
+const current = useList(stat => stat.current)
 </script>
 
 <template>
 <div class="h-full flex flex-col">
     <div class="scrollbar h-full overflow-auto">
-        <Item v-for="(item, index) in range(0, 10)" :key="index" :item="item"/>
+        <Item v-for="(item, index) in itemList" :key="index" :item="item"/>
     </div>
 
     <div class="min-h-50 h-50 w-full bg-[#f8f9fa] border-t-[1px] border-gray-300">
