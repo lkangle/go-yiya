@@ -1,19 +1,21 @@
 <script setup>
 import { ArrowRightOutlined, FolderOpenOutlined, ReadOutlined } from '@ant-design/icons-vue';
 import { formatFileSize } from '@utils/index';
+import Image from '../image.vue';
 
 const props = defineProps(['item'])
 const item = props.item
-console.log('[item]', item)
+console.log('[item]', item, props)
+
 </script>
 
 <template>
-    <div class="compress-item h-45 flex items-center justify-between px-15 odd:bg-gray-50">
+    <div @click="$emit('select', item)" class="compress-item h-45 flex items-center justify-between px-15 odd:bg-gray-50">
         <div className="status-icon flex items-center justify-center">
             <i data-status="3"></i>
         </div>
-        <div class="w-38 h-38 mx-12 flex items-center justify-center">
-            <img class="object-contain" draggable="false" :src="item.path" alt=""/>
+        <div class="w-35 h-35 rounded-[5px] overflow-hidden mx-12 flex items-center justify-center">
+          <Image class="object-contain w-full h-full" :src="item.path"/>
         </div>
         <div class="leading-14 flex-1">
             <p class="text-11 text-gray-500 max-w-180 truncate">{{ item.filename }}</p>

@@ -4,6 +4,9 @@ import (
 	"context"
 	"embed"
 	"fmt"
+	"net/http"
+	"os"
+	"strconv"
 	"yiya-v2/backend/consts"
 	"yiya-v2/backend/services"
 
@@ -23,8 +26,30 @@ var assets embed.FS
 //go:embed build/appicon.png
 var icon []byte
 
+type ImageHandler struct {
+	http.Handler
+}
+
+func (img *ImageHandler) ServeHTTP(res http.ResponseWriter, req *http.Request) {
+	p := req.URL.Query().Get("path")
+	if p != "" {
+		filedata, err := os.ReadFile(p)
+		if err != nil {
+			res.WriteHeader(http.StatusBadRequest)
+			res.Write([]byte("Could not load file"))
+			return
+		}
+
+		res.Header().Add("Content-Length", strconv.Itoa(len(filedata)))
+		res.Write(filedata)
+	}
+	res.WriteHeader(http.StatusNotFound)
+}
+
 func main() {
 	isMacOS := goruntime.GOOS == "darwin"
+
+	imgHandler := &ImageHandler{}
 
 	app := services.AppService()
 	fsv := services.FileService()
@@ -48,7 +73,8 @@ func main() {
 			DisableWebViewDrop: true,
 		},
 		AssetServer: &assetserver.Options{
-			Assets: assets,
+			Assets:  assets,
+			Handler: imgHandler,
 		},
 		Bind: []interface{}{
 			app,

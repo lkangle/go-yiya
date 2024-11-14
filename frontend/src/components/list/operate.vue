@@ -1,13 +1,16 @@
 <script setup>
 import useList from '@/store/use-list';
 import { RollbackOutlined, RetweetOutlined, CloseOutlined } from '@ant-design/icons-vue';
+import { watchEffect } from 'vue';
 
 const current = useList(stat => stat.current)
 
-console.log("[current]", current)
-
 const props = defineProps(['class'])
 const emit = defineEmits(["undo", "redo", "close"])
+
+watchEffect(() => {
+    console.log(current,'////current')
+})
 </script>
 
 <template>

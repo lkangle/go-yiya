@@ -5,10 +5,17 @@ let os = ''
 let info = {}
 
 export async function loadEnvironment() {
-    const env = await Environment()
-    info = await GetAppInfo()
-    info.onTop = await GetIsAlwaysOnTop()
+    const [env, fo, onTop] = await Promise.all([Environment(), GetAppInfo(), GetIsAlwaysOnTop()])
+    
+    Object.assign(info, fo, env, {
+        onTop,
+    });
     os = env.platform
+    console.log("[load]", info)
+}
+
+export const isDev = () => {
+    return info.buildType === 'dev'
 }
 
 export function isMacOS() {
