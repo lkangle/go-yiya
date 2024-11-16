@@ -2,22 +2,21 @@
 import Item from './item.vue';
 import { PlusOutlined } from '@ant-design/icons-vue';
 import Operate from './operate.vue';
-import useList, { onSelectFiles } from '@/store/use-list';
+import useList from '@/store/use-list';
 
-const clear = useList(stat => stat.clear)
-const itemList = useList(stat => stat.data)
-const select = useList(stat => stat.select)
+const store = useList()
+const onSelect = (item) => store.select(item?.id);
 </script>
 
 <template>
 <div class="h-full flex flex-col">
     <div class="scrollbar h-full overflow-auto">
-        <Item v-for="(item) in itemList" :key="item.id" :item="item" @select="select"/>
+        <Item v-for="(item) in store.dataList" :key="item.id" :item="item" @select="onSelect"/>
     </div>
 
     <div class="min-h-50 h-50 w-full bg-[#f8f9fa] border-t-[1px] border-gray-300">
         <div class="flex items-center justify-between h-full px-10">
-            <a-button @click="onSelectFiles" type="primary" shape="circle" class="pt-5 flex justify-center items-center">
+            <a-button @click="store.openSelectImages" type="primary" shape="circle" class="pt-5 flex justify-center items-center">
                 <template #icon>
                     <PlusOutlined class="text-15" />
                 </template>
@@ -30,7 +29,7 @@ const select = useList(stat => stat.select)
                     <span>(0.00KB)</span>
                 </p>
             </div>
-            <Operate @close="clear"/>
+            <Operate @close="store.clear"/>
         </div>
     </div>
 </div>

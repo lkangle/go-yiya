@@ -3,13 +3,13 @@ import useList from '@/store/use-list';
 import { RollbackOutlined, RetweetOutlined, CloseOutlined } from '@ant-design/icons-vue';
 import { watchEffect } from 'vue';
 
-const current = useList(stat => stat.current)
+const store = useList()
 
 const props = defineProps(['class'])
 const emit = defineEmits(["undo", "redo", "close"])
 
 watchEffect(() => {
-    console.log(current,'////current')
+    console.log('[current...]', store.current)
 })
 </script>
 

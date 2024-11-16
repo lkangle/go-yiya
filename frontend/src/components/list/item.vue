@@ -5,12 +5,10 @@ import Image from '../image.vue';
 
 const props = defineProps(['item'])
 const item = props.item
-console.log('[item]', item, props)
-
 </script>
 
 <template>
-    <div @click="$emit('select', item)" class="compress-item h-45 flex items-center justify-between px-15 odd:bg-gray-50">
+    <div @click="$emit('select', item)" class="cursor-pointer h-45 flex items-center justify-between px-15 odd:bg-gray-50">
         <div className="status-icon flex items-center justify-center">
             <i data-status="3"></i>
         </div>

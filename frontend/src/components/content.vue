@@ -1,21 +1,19 @@
 <script setup>
-import { computed } from 'vue';
 import Empty from './empty.vue';
 import List from './list/index.vue';
 import DragContainer from './drag-container.vue';
 import { getAppVersion } from '@utils/platform';
-import useList, { onSelectFiles } from '@/store/use-list';
+import useList from '@/store/use-list';
 
-const dataList = useList(stat => stat.data)
-const isEmpty = computed(() => dataList.value.length === 0)
+const store = useList()
 </script>
 
 <template>
     <DragContainer class="flex-1 min-h-300">
-        <template v-if="isEmpty">
+        <template v-if="store.isEmpty">
             <Empty class="mx-auto mt-115"/>
             <div class="px-40 mt-100">
-                <button @click="onSelectFiles" class="btn-indigo w-full">
+                <button @click="store.openSelectImages" class="btn-indigo w-full">
                     选择图片  
                 </button>
             </div>
@@ -24,7 +22,7 @@ const isEmpty = computed(() => dataList.value.length === 0)
                 <p class="text-10">© 2024. v{{ getAppVersion() }} </p>
             </footer>
         </template>
-        <List v-if="!isEmpty"/>
+        <List v-if="!store.isEmpty"/>
     </DragContainer>
 </template>
 <style scoped>
