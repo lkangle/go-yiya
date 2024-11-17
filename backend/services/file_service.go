@@ -31,6 +31,11 @@ func (f *fileService) Setup(ctx context.Context) {
 	f.ctx = ctx
 }
 
+func (f *fileService) ParseFilePaths(paths []string) []types.ImageFileInfo {
+	list := utils.ParseDropPaths(paths)
+	return list
+}
+
 func (fs *fileService) OpenSelectFilesDialog() (resp types.JSResp) {
 	fileList, err := runtime.OpenMultipleFilesDialog(fs.ctx, runtime.OpenDialogOptions{
 		DefaultFilename:            "",
@@ -64,8 +69,4 @@ func (fs *fileService) CompressImages(paths []string, opt types.CompressOptions)
 
 	resp.Success = true
 	return
-}
-
-func (fs *fileService) GetBaseInfo(path string) types.ImageFileInfo {
-	return utils.GetBaseInfo(path)
 }

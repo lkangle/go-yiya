@@ -1,7 +1,5 @@
 import { defineStore } from "pinia";
-import { OnFileDrop } from '@wailsjs/runtime/runtime';
-import { OpenSelectFilesDialog, GetBaseInfo } from "@wailsjs/go/services/fileService";
-import { onMounted } from "vue";
+import { OpenSelectFilesDialog } from "@wailsjs/go/services/fileService";
 
 const useList = defineStore("image_list", {
     state: () => ({dataList: [], currentId: ''}),
@@ -22,8 +20,8 @@ const useList = defineStore("image_list", {
         clear() {
             this.dataList = []
         },
-        $add(data) {
-            this.dataList.push(...data)
+        $add(list) {
+            this.dataList.push(...list)
         },
         async openSelectImages() {
             const resp = await OpenSelectFilesDialog()
@@ -33,16 +31,5 @@ const useList = defineStore("image_list", {
         }
     }
 })
-
-export function useOnFile() {
-    const store = useList()
-
-    onMounted(() => {
-        OnFileDrop(async (_, __, paths) => {
-            const list = await Promise.all(paths.map((p) => GetBaseInfo(p)))
-            store.$add(list)
-        })
-    })
-}
 
 export default useList

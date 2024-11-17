@@ -3,9 +3,12 @@ import Item from './item.vue';
 import { PlusOutlined } from '@ant-design/icons-vue';
 import Operate from './operate.vue';
 import useList from '@/store/use-list';
+import { computed } from 'vue';
 
 const store = useList()
 const onSelect = (item) => store.select(item?.id);
+
+const total = computed(() => store.dataList.length)
 </script>
 
 <template>
@@ -22,7 +25,7 @@ const onSelect = (item) => store.select(item?.id);
                 </template>
             </a-button>
             <div class="text-12 leading-14 px-10 flex-1">
-                <p class="text-gray-500">成功压缩0个图片，共10个图片</p>
+                <p class="text-gray-500">成功压缩0个图片，共{{ total }}个图片</p>
                 <p class="text-10 text-gray-400">
                     <span>体积降低</span>
                     <span class="text-green-500 px-2">50%</span>

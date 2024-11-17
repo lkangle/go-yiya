@@ -2,9 +2,9 @@
 import { ConfigProvider, theme } from 'ant-design-vue';
 import Content from './components/content.vue';
 import Toolbar from './components/toolbar.vue';
-import { useOnFile } from './store/use-list';
+import useOnDrop from './store/use-on-drop';
 
-useOnFile()
+useOnDrop()
 </script>
 
 <template>
