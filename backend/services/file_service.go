@@ -68,15 +68,14 @@ func (fs *fileService) OpenSelectFilesDialog() (resp types.JSResp) {
 }
 
 func (fs *fileService) OpenFile(path string) (resp types.JSResp) {
-	var name string
-	if utils.IsMacOS {
-		name = "open"
-	} else {
-		name = "start"
-	}
-
+	var cmd *exec.Cmd
 	dir := filepath.Dir(path)
-	cmd := exec.Command(name, dir)
+	if utils.IsMacOS {
+		// cmd = exec.Command("open", "-R", path)
+		cmd = exec.Command("open", dir)
+	} else {
+		cmd = exec.Command("explorer", "/select,", path)
+	}
 
 	err := cmd.Run()
 	resp.Success = true
