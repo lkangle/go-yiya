@@ -1,10 +1,16 @@
 <script setup>
 import { ArrowRightOutlined, FolderOpenOutlined, ReadOutlined } from '@ant-design/icons-vue';
+import { OpenFile } from '@wailsjs/go/services/fileService';
 import { formatFileSize } from '@utils/index';
 import Image from '../image.vue';
 
 const props = defineProps(['item'])
 const item = props.item
+
+const open = async () => {
+  let r = await OpenFile(item.path)
+  console.log("open..", r)
+}
 </script>
 
 <template>
@@ -33,7 +39,7 @@ const item = props.item
                   <ReadOutlined class="text-15 text-gray-500" />
               </template>
           </a-button>
-          <a-button type="text" shape="circle" class="flex justify-center items-center">
+          <a-button @click="open" type="text" shape="circle" class="flex justify-center items-center">
               <template #icon>
                   <FolderOpenOutlined class="text-15 text-gray-500" />
               </template>

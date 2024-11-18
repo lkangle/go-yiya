@@ -1,6 +1,8 @@
 package services
 
 import (
+	"os/exec"
+	"path/filepath"
 	"sync"
 	"yiya-v2/backend/types"
 	"yiya-v2/backend/utils"
@@ -62,6 +64,26 @@ func (fs *fileService) OpenSelectFilesDialog() (resp types.JSResp) {
 	})
 	resp.Data = fileInfos
 	resp.Success = true
+	return
+}
+
+func (fs *fileService) OpenFile(path string) (resp types.JSResp) {
+	var name string
+	if utils.IsMacOS {
+		name = "open"
+	} else {
+		name = "start"
+	}
+
+	dir := filepath.Dir(path)
+	cmd := exec.Command(name, dir)
+
+	err := cmd.Run()
+	resp.Success = true
+	if err != nil {
+		resp.Success = false
+		resp.Msg = err.Error()
+	}
 	return
 }
 

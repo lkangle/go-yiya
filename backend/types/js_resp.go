@@ -2,7 +2,7 @@ package types
 
 type JSResp struct {
 	Success bool   `json:"success"`
-	Msg     string `json:"msg"`
+	Msg     string `json:"message"`
 	Data    any    `json:"data,omitempty"`
 }
 

@@ -9,8 +9,7 @@ import (
 	"strconv"
 	"yiya-v2/backend/consts"
 	"yiya-v2/backend/services"
-
-	goruntime "runtime"
+	"yiya-v2/backend/utils"
 
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
@@ -47,8 +46,6 @@ func (img *ImageHandler) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
-	isMacOS := goruntime.GOOS == "darwin"
-
 	imgHandler := &ImageHandler{}
 
 	app := services.AppService()
@@ -64,7 +61,7 @@ func main() {
 		MinWidth:         consts.MIN_WINDOW_WIDTH,
 		MinHeight:        consts.MIN_WINDOW_HEIGHT,
 		DisableResize:    true,
-		Frameless:        !isMacOS,
+		Frameless:        !utils.IsMacOS,
 		StartHidden:      true,
 		AlwaysOnTop:      app.GetIsAlwaysOnTop(),
 		BackgroundColour: options.NewRGBA(0, 0, 0, 0),
