@@ -4,6 +4,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"sync"
+	"time"
 	"yiya-v2/backend/types"
 	"yiya-v2/backend/utils"
 
@@ -80,14 +81,21 @@ func (fs *fileService) OpenFile(path string) (resp types.JSResp) {
 	err := cmd.Run()
 	resp.Success = true
 	if err != nil {
-		resp.Success = false
-		resp.Msg = err.Error()
+		if exitErr, ok := err.(*exec.ExitError); !ok || exitErr.ExitCode() != 1 {
+			resp.Success = false
+			resp.Msg = err.Error()
+		}
 	}
 	return
 }
 
-func (fs *fileService) CompressImages(paths []string, opt types.CompressOptions) (resp types.JSResp) {
+func (fs *fileService) CompressImage(path string, opt types.CompressOptions) (res types.CompressResult) {
+	res.Success = true
+	res.Path = path
+	res.TempFile = path
+	res.Size = 10000
 
-	resp.Success = true
+	time.Sleep(1 * time.Second)
+
 	return
 }

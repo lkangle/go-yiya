@@ -3,18 +3,22 @@ import Item from './item.vue';
 import { PlusOutlined } from '@ant-design/icons-vue';
 import Operate from './operate.vue';
 import useList from '@/store/use-list';
-import { computed } from 'vue';
+import { computed, onUnmounted } from 'vue';
+import useCurrent from '@/store/use-current';
 
+const curStore = useCurrent()
 const store = useList()
-const onSelect = (item) => store.select(item?.id);
-
 const total = computed(() => store.dataList.length)
+
+onUnmounted(() => {
+    curStore.$reset()
+})
 </script>
 
 <template>
 <div class="h-full flex flex-col">
     <div class="scrollbar h-full overflow-auto">
-        <Item v-for="(item) in store.dataList" :key="item.id" :item="item" @select="onSelect"/>
+        <Item v-for="(item) in store.dataList" :key="item.id" :item="item"/>
     </div>
 
     <div class="min-h-50 h-50 w-full bg-[#f8f9fa] border-t-[1px] border-gray-300">

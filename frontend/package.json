@@ -11,8 +11,9 @@
   "dependencies": {
     "@ant-design/icons-vue": "^7.0.1",
     "ant-design-vue": "^4.2.5",
-    "vue": "^3.2.45",
-    "pinia": "^2.2.6"
+    "p-limit": "^6.1.0",
+    "pinia": "^2.2.6",
+    "vue": "^3.2.45"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.0.0",

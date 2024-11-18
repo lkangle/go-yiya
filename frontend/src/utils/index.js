@@ -26,3 +26,34 @@ export function formatFileSize(bytes) {
     
     return `${formattedSize}${sizes[i]}`;
 }
+
+export const withError = async (promiseFn) => {
+    let result;
+    try {
+        let promise;
+        if (typeof promiseFn === 'function') {
+            promise = promiseFn()
+        } else {
+            promise = promiseFn
+        }
+
+        const data = await promise
+        return [data, null]
+    } catch(err) {
+        result = [null, err]
+    }
+
+    return result;
+}
+
+export const lessRate = (old, now) => {
+    let osize = old.size || 1;
+    let nsize = now.size || 0;
+
+    let r = (1 - nsize / osize) * -100;
+    let t = Number(r).toFixed(1) + '%'
+    if (r>0) {
+        return '+' + t;
+    }
+    return t;
+}

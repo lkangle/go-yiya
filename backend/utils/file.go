@@ -64,15 +64,14 @@ func IsVaildImage(filePath string) bool {
 
 func GetBaseInfo(path string) types.ImageFileInfo {
 	info := types.ImageFileInfo{
-		Id:         uuid.NewString(),
-		Path:       path,
-		OriginSize: -1,
-		Size:       0,
+		Id:   uuid.NewString(),
+		Path: path,
+		Size: -1,
 	}
 
 	stat, err := os.Stat(path)
 	if err == nil {
-		info.OriginSize = stat.Size()
+		info.Size = stat.Size()
 		info.Filename = stat.Name()
 
 		ce, err := DetectContentType(path)

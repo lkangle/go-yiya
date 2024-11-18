@@ -1,29 +1,15 @@
 <script setup>
-import { debounce } from '@utils/index';
-import { GetCompressOptions, UpdateCompressOptions } from '@wailsjs/go/services/appService';
+import useOptions from '@/store/use-options';
 import { Modal } from 'ant-design-vue'
-import { reactive, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 
 const quaOptions = [
     {label: "优质", value: 2},
     {label: "一般", value: 1},
 ]
 
-const data = reactive({
-    quality: 1,
-    override: true,
-    newSuffix: ''
-})
-GetCompressOptions().then((resp) => {
-    if(resp.success) {
-        Object.assign(data, resp.data)
-    }
-})
-
-const saveOptions = debounce((data) => {
-    UpdateCompressOptions(data)
-}, 500);
-watch(() => data, (n) => saveOptions({...n}), {deep: true})
+const store = useOptions()
+watch(() => store.data, (n) => store.save({...n}), {deep: true})
 
 const isOpen = ref(false)
 const toggle = () => {
@@ -41,7 +27,7 @@ const toggle = () => {
                         <span>覆盖原文件:</span>
                     </div>
                     <div class="flex-1 flex justify-end">
-                        <a-switch v-model:checked="data.override" />
+                        <a-switch v-model:checked="store.data.override" />
                     </div>
                 </div>
                 <div class="mb-12 flex items-center justify-between">
@@ -49,7 +35,7 @@ const toggle = () => {
                         <span>新文件后缀:</span>
                     </div>
                     <div class="flex-1">
-                        <a-input :disabled="data.override" autocomplete="off" v-model:value="data.newSuffix" />
+                        <a-input :disabled="store.data.override" autocomplete="off" v-model:value="store.data.newSuffix" />
                     </div>
                 </div>
                 <div class="mb-15 flex items-center justify-between">
@@ -60,7 +46,7 @@ const toggle = () => {
                         <span>量:</span>
                     </div>
                     <div class="flex-1">
-                        <a-select class="w-full" :options="quaOptions" v-model:value="data.quality"/>
+                        <a-select class="w-full" :options="quaOptions" v-model:value="store.data.quality"/>
                     </div>
                 </div>
                 <div class="text-gray-400 text-center text-12">
