@@ -11,7 +11,6 @@ const useOptions = defineStore("compress-options",  () => {
     })
 
     GetCompressOptions().then((resp) => {
-        console.log("init options....", resp)
         if(resp.success) {
             Object.assign(data, resp.data)
         }
