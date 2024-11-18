@@ -5,28 +5,31 @@ import { formatFileSize, lessRate } from '@utils/index';
 import Image from '../image.vue';
 import useCompress from '@/store/use-compress';
 import useCurrent from '@/store/use-current';
-import { computed, reactive } from 'vue';
-// 压缩结果数据
-const result = reactive({status: 1})
-// 提交压缩
-const emitCompress = useCompress()
-const curStore = useCurrent()
+import { computed } from 'vue';
 
 const { item } = defineProps(['item'])
-const open = async () => {
-  await OpenFile(item.path)
+const status = computed(() => item.result.status)
+
+// 执行压缩
+{
+  const emitCompress = useCompress()
+  emitCompress(item, (it) => {
+    Object.assign(item.result, it)
+  })
 }
+
+const curStore = useCurrent()
 const select = () => {
   // 未压缩完成不能选中
-  if (result.status<3) {
+  if (item.result.status<3) {
     return
   }
-  curStore.updateCurrent({...item, result})
+  curStore.updateCurrent(item)
 }
 
 // 压缩后是不是变大了
 const isBig =  computed(() => {
-  return result.status === 3 && result.size != null && result.size > item.size
+  return item.result.status === 3 && item.result.size != null && item.result.size > item.size
 })
 // 是不是被选中的
 const isSelected = computed(() => {
@@ -34,37 +37,37 @@ const isSelected = computed(() => {
   return sid === item.id
 })
 
-emitCompress(item, (it) => {
-  Object.assign(result, it)
-})
+const open = async () => {
+  await OpenFile(item.path)
+}
 </script>
 
 <template>
     <div @click="select" class="img-item cursor-pointer h-45 flex items-center justify-between px-15 odd:bg-gray-50" :data-selected="isSelected">
         <div className="status-icon flex items-center justify-center">
-            <i :data-status="result.status" :data-big="isBig"/>
+            <i :data-status="status" :data-big="isBig"/>
         </div>
         <div class="w-35 h-35 rounded-[5px] overflow-hidden mx-12 flex items-center justify-center">
           <Image class="object-contain w-full h-full" :src="item.path"/>
         </div>
         <div class="leading-14 flex-1">
             <p class="text-11 text-gray-500 max-w-180 truncate">{{ item.filename }}</p>
-            <p v-if="result.status<2" class="text-10 text-gray-400">
+            <p v-if="status<2" class="text-10 text-gray-400">
                 <span>等待压缩</span>
             </p>
-            <p v-if="result.status===2"  class="text-10 text-gray-400">
+            <p v-if="status===2"  class="text-10 text-gray-400">
                 <span>压缩中...</span>
             </p>
-            <p v-if="result.status===3" class="text-10 text-gray-400">
+            <p v-if="status===3" class="text-10 text-gray-400">
                 <span :class="['mr-4', {
                   'text-green-500': !isBig,
                   'text-yellow-600': isBig
-                }]">{{ lessRate(item, result) }}</span>
+                }]">{{ lessRate(item, item.result) }}</span>
                 <span>{{ formatFileSize(item.size) }}</span>
                 <ArrowRightOutlined class="scale-75 pt-1 mx-2"/>
-                <span>{{ formatFileSize(result.size) }}</span>
+                <span>{{ formatFileSize(item.result.size) }}</span>
             </p>
-            <p v-if="result.status===4" class="text-10 text-red-600">
+            <p v-if="status===4" class="text-10 text-red-600">
                 <span>压缩失败</span>
             </p>
         </div>

@@ -57,3 +57,11 @@ export const lessRate = (old, now) => {
     }
     return t;
 }
+
+export const sumBy = (list, get) => {
+    const s = (list||[]).reduce((sum, it) => {
+        let v = get(it)
+        return sum + v
+    }, 0);
+    return s
+}

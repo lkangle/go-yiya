@@ -13,14 +13,17 @@ const useList = defineStore("image_list", {
             this.dataList = []
         },
         $add(list) {
-            this.dataList.push(...list)
+            const rlist = list.map(it => ({
+                ...it, result: {status: 1}
+            }))
+            this.dataList.push(...rlist)
         },
         async openSelectImages() {
             const resp = await OpenSelectFilesDialog()
             if (resp.success) {
                 this.$add(resp.data);
             }
-        }
+        },
     }
 })
 
