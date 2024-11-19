@@ -14,7 +14,7 @@ export function range(start, end) {
 }
 
 export function formatFileSize(bytes) {
-    bytes = +bytes
+    bytes = Math.abs(+bytes)
     if (!bytes) {
         return '0B'
     }
@@ -47,8 +47,8 @@ export const withError = async (promiseFn) => {
 }
 
 export const lessRate = (old, now) => {
-    let osize = old.size || 1;
-    let nsize = now.size || 0;
+    let osize = old.size || old || 1;
+    let nsize = now.size || now || 0;
 
     let r = (1 - nsize / osize) * -100;
     let t = Number(r).toFixed(1) + '%'

@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { OpenSelectFilesDialog } from "@wailsjs/go/services/fileService";
-import { formatFileSize, sumBy } from "@utils/index";
+import { formatFileSize, lessRate, sumBy } from "@utils/index";
 
 const useList = defineStore("image_list", {
     state: () => ({dataList: []}),
@@ -23,11 +23,16 @@ const useList = defineStore("image_list", {
                 }
                 return +it.size;
             })
+            let rate = 1 - nsize / osize
+            let rateText = lessRate(osize, nsize)
+
             let dsize = osize - nsize;
             let dtext = formatFileSize(dsize);
-            let rate = (1 - nsize / osize) * 100
-            let rateText = Number(rate).toFixed(1) + '%'
-            return {total, successCount, dsize, dtext, rate, rateText }
+            if (dsize < 0) {
+                dtext = `+${dtext}`
+            }
+
+            return {total, successCount, rate, rateText, dsize, dtext }
         }
     },
     actions: {

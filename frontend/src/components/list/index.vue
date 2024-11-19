@@ -32,8 +32,10 @@ onUnmounted(() => {
                     成功压缩{{ store.stat.successCount }}个图片，共{{ store.stat.total }}个图片
                 </p>
                 <p class="text-10 text-gray-400">
-                    <span>体积降低</span>
-                    <span class="text-green-500 px-2">{{ store.stat.rateText }}</span>
+                    <span>体积节省</span>
+                    <span :class="['text-green-500 px-2', {
+                        '!text-yellow-600': store.stat.rate<=0
+                    }]">{{ store.stat.rateText }}</span>
                     <span>({{ store.stat.dtext }})</span>
                 </p>
             </div>
