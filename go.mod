@@ -5,6 +5,7 @@ go 1.21
 toolchain go1.23.2
 
 require (
+	github.com/chai2010/webp v1.1.1
 	github.com/google/uuid v1.3.0
 	github.com/vrischmann/userdir v0.0.0-20151206171402-20f291cebd68
 	github.com/wailsapp/wails/v2 v2.9.2

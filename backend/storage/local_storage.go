@@ -3,8 +3,7 @@ package storage
 import (
 	"os"
 	"path"
-
-	"github.com/vrischmann/userdir"
+	"yiya-v2/backend/utils"
 )
 
 // localStorage provides reading and writing application data to the user's
@@ -16,7 +15,7 @@ type localStorage struct {
 // NewLocalStore returns a localStore instance.
 func NewLocalStore(filename string) *localStorage {
 	return &localStorage{
-		ConfPath: path.Join(userdir.GetConfigHome(), "YIYA_IG", filename),
+		ConfPath: path.Join(utils.GetYiHome(), filename),
 	}
 }
 

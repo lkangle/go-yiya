@@ -4,7 +4,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"sync"
-	"time"
+	"yiya-v2/backend/compress"
 	"yiya-v2/backend/types"
 	"yiya-v2/backend/utils"
 
@@ -89,13 +89,21 @@ func (fs *fileService) OpenFile(path string) (resp types.JSResp) {
 	return
 }
 
-func (fs *fileService) CompressImage(path string, opt types.CompressOptions) (res types.CompressResult) {
-	res.Success = true
-	res.Path = path
-	res.TempFile = path
-	res.Size = 10000
+func (fs *fileService) CompressImage(input types.ImageFileInfo, opt types.CompressOptions) (res types.CompressResult) {
+	outPath, err := compress.DoCompress(input, opt)
 
-	time.Sleep(1 * time.Second)
+	if err != nil {
+		res.Message = err.Error()
+		res.Success = false
+	} else {
+		res.Success = true
+		res.Path = outPath
+		size := utils.GetSize(outPath)
+		res.Size = int(size)
+	}
+	return
+}
 
+func (fs *fileService) RestoreImage(input types.ImageFileInfo) (resp types.JSResp) {
 	return
 }

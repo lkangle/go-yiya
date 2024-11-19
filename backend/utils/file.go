@@ -62,6 +62,14 @@ func IsVaildImage(filePath string) bool {
 	return false
 }
 
+func GetSize(path string) int64 {
+	stat, err := os.Stat(path)
+	if err == nil {
+		return stat.Size()
+	}
+	return 0
+}
+
 func GetBaseInfo(path string) types.ImageFileInfo {
 	info := types.ImageFileInfo{
 		Id:   uuid.NewString(),
@@ -137,4 +145,16 @@ func ParseDropPaths(paths []string) []types.ImageFileInfo {
 	parsePaths(paths, groupId, &fileInfos)
 
 	return fileInfos
+}
+
+func CreateFile(path string) (file *os.File, err error) {
+	dir := filepath.Dir(path)
+
+	err = os.MkdirAll(dir, os.ModePerm)
+	if err != nil {
+		return nil, err
+	}
+
+	file, err = os.Create(path)
+	return
 }

@@ -1,5 +1,10 @@
 package types
 
+const (
+	QuaNormal = 1
+	QuaBest   = 2
+)
+
 type SystemOptions struct {
 	WindowWidth   int  `json:"windowWidth" yaml:"window_width"`
 	WindowHeight  int  `json:"windowHeight" yaml:"window_height"`

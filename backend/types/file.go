@@ -1,11 +1,10 @@
 package types
 
 type CompressResult struct {
-	TempFile string `json:"temp_file"` // 可能存在的原文件复制的临时文件
-	Path     string `json:"path"`      // 压缩后的文件路径
-	Size     int    `json:"size"`
-	Success  bool   `json:"success"` //是否压缩成功
-	Message  string `json:"message"` // 压缩失败的异常信息
+	Path    string `json:"path"` // 压缩后的文件路径
+	Size    int    `json:"size"`
+	Success bool   `json:"success"` //是否压缩成功
+	Message string `json:"message"` // 压缩失败的异常信息
 }
 
 type ImageFileInfo struct {
