@@ -7,6 +7,7 @@ toolchain go1.23.2
 require (
 	github.com/chai2010/webp v1.1.1
 	github.com/google/uuid v1.3.0
+	github.com/tidwall/gjson v1.18.0
 	github.com/vrischmann/userdir v0.0.0-20151206171402-20f291cebd68
 	github.com/wailsapp/wails/v2 v2.9.2
 	golang.org/x/net v0.25.0
@@ -30,6 +31,8 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/rivo/uniseg v0.4.4 // indirect
 	github.com/samber/lo v1.38.1 // indirect
+	github.com/tidwall/match v1.1.1 // indirect
+	github.com/tidwall/pretty v1.2.1 // indirect
 	github.com/tkrajina/go-reflector v0.5.6 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasttemplate v1.2.2 // indirect

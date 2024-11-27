@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"yiya-v2/backend/compress"
 	"yiya-v2/backend/consts"
 	"yiya-v2/backend/services"
 	"yiya-v2/backend/utils"
@@ -83,6 +84,8 @@ func main() {
 
 			x, y := app.GetLocalPosition()
 			runtime.WindowSetPosition(ctx, x, y)
+
+			go compress.LoadPngquant()
 		},
 		OnDomReady: func(ctx context.Context) {
 			// TODO: 拆包,ssg优化 首页加载速度
