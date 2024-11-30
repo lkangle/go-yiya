@@ -1,78 +1,42 @@
 package compress
 
 import (
+	"bytes"
+	"embed"
 	"io"
 	"log"
-	"net/http"
+	"os"
 	"yiya-v2/backend/utils"
-
-	"github.com/tidwall/gjson"
 )
 
-type binInfo struct {
-	Version     string
-	DownloadUrl string
-}
-
-func getLatestBin() *binInfo {
-	tgfilename := utils.GetPngquantFilename()
-	if tgfilename == "" {
-		panic("不支持的平台")
-	}
-
-	resp, err := http.Get("https://api.github.com/repos/lkangle/pngquant-c/releases/latest")
-	if err != nil {
-		return nil
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		return nil
-	}
-
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return nil
-	}
-
-	r := gjson.ParseBytes(body)
-	version := r.Get("name").String()
-	if version == "" {
-		return nil
-	}
-
-	info := binInfo{}
-
-	assets := r.Get("assets").Array()
-	for _, asset := range assets {
-		filename := asset.Get("name").String()
-		downloadUrl := asset.Get("browser_download_url").String()
-		if tgfilename == filename && downloadUrl != "" {
-			info.Version = version
-			info.DownloadUrl = downloadUrl
-			return &info
-		}
-	}
-	return nil
-}
+//go:embed all:bin
+var assets embed.FS
 
 func LoadPngquant() {
-	info := getLatestBin()
-	if info == nil {
-		log.Println("png压缩命令行文件不存在..")
+	binBytes, err := assets.ReadFile("bin/" + utils.GetPngquantFilename())
+	if err != nil {
+		log.Println("read embed file fail: " + err.Error())
 		return
 	}
-	oldVersion := utils.GetBinVersion()
+	filepath := utils.GetPngquantFullPath()
 
-	if oldVersion == "" || utils.CompareVersions(oldVersion, info.Version) < 0 {
-		filepath := utils.GetPngquantFullPath()
-		err := utils.DownloadFile(info.DownloadUrl, filepath)
-		if err != nil {
-			log.Println("下载失败: ", err.Error())
-		} else {
-			log.Println("下载成功: ", filepath)
-		}
+	_, err = os.Stat(filepath)
+	if err == nil {
+		log.Println("可执行文件已存在: " + filepath)
+		return
+	}
 
-		utils.SetBinVersion(info.Version)
+	file, err := utils.CreateFile(filepath)
+	if err != nil {
+		log.Println("create file fail: " + err.Error())
+		return
+	}
+	defer file.Close()
+	_, err = io.Copy(file, bytes.NewBuffer(binBytes))
+
+	if err != nil {
+		log.Println("copy file fail: " + err.Error())
+	} else {
+		log.Println("copy file success: " + filepath)
 	}
 }

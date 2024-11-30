@@ -137,7 +137,7 @@ func parsePaths(paths []string, groupId string, list *types.ImageInfoList) {
 	}
 }
 
-// 解析拖拽进来的路径 输出所有是图片的文件列表 可能存在文件夹 也可能有不支持的文件 都需要过滤
+// ParseDropPaths 解析拖拽进来的路径 输出所有是图片的文件列表 可能存在文件夹 也可能有不支持的文件 都需要过滤
 func ParseDropPaths(paths []string) []types.ImageFileInfo {
 	groupId := uuid.NewString()
 	fileInfos := types.ImageInfoList{}

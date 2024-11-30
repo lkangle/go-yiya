@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"os"
 	"path/filepath"
 	"runtime"
 	"strconv"
@@ -13,40 +12,25 @@ import (
 
 func GetPngquantFilename() string {
 	goos := runtime.GOOS
-	// arch := runtime.GOARCH
+	arch := runtime.GOARCH
 
 	switch goos {
 	case "windows":
 		return "pngquant-windows.exe"
 	case "darwin":
-		return "pngquant-darwin"
+		return "pngquant-darwin-" + arch
 	case "linux":
 		return "pngquant-linux"
 	}
 	return ""
 }
 
-// 获取可执行文件完整路径
+// GetPngquantFullPath 获取可执行文件完整路径
 func GetPngquantFullPath() string {
 	home := GetYiHome()
 	pngquantPath := filepath.Join(home, GetPngquantFilename())
 
 	return pngquantPath
-}
-
-func GetBinVersion() string {
-	p := filepath.Join(GetYiHome(), "bin-version.txt")
-
-	data, err := os.ReadFile(p)
-	if err != nil {
-		return ""
-	}
-	return string(data)
-}
-
-func SetBinVersion(version string) {
-	p := filepath.Join(GetYiHome(), "bin-version.txt")
-	_ = os.WriteFile(p, []byte(version), os.ModePerm)
 }
 
 // CompareVersions 比较两个版本号 a 和 b

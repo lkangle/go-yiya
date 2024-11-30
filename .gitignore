@@ -4,3 +4,4 @@ frontend/dist
 .DS_Store
 frontend/wailsjs/go
 *.md5
+.idea

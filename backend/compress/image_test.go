@@ -27,3 +27,7 @@ func TestJp(t *testing.T) {
 	fmt.Println(out)
 	fmt.Printf("out size: %d, origin size %d, dd rate %.2f\n", size, info.Size, r)
 }
+
+func TestLoadPngquant(t *testing.T) {
+	LoadPngquant()
+}
