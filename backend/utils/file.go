@@ -105,7 +105,7 @@ func appendList(path, groupId string, list types.ImageInfoList) types.ImageInfoL
 }
 
 func walk(root, groupId string, list *types.ImageInfoList) {
-	_ = filepath.Walk(root, func(path string, info fs.FileInfo, err error) error {
+	_ = filepath.WalkDir(root, func(path string, d fs.DirEntry, err error) error {
 		// 忽略错误
 		if err != nil {
 			return nil
@@ -115,7 +115,7 @@ func walk(root, groupId string, list *types.ImageInfoList) {
 			return nil
 		}
 
-		if info.IsDir() {
+		if d.IsDir() {
 			walk(path, groupId, list)
 		} else {
 			*list = appendList(path, groupId, *list)
@@ -140,6 +140,9 @@ func parsePaths(paths []string, groupId string, list *types.ImageInfoList) {
 }
 
 // ParseDropPaths 解析拖拽进来的路径 输出所有是图片的文件列表 可能存在文件夹 也可能有不支持的文件 都需要过滤
+// - 拖进来一个文件夹
+// - 拖进来多个文件夹
+// - 拖进来过个文件，包括文件夹和文件
 func ParseDropPaths(paths []string) []types.ImageFileInfo {
 	var groupId = ""
 	// 拖入的是包含多个文件的目录时 才存在组
