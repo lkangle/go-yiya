@@ -1,19 +1,8 @@
-# README
+# 图片压缩工具
 
-## About
-
-This is the official Wails Vue template.
-
-You can configure the project by editing `wails.json`. More information about the project settings can be found
-here: https://wails.io/docs/reference/project-config
-
-## Live Development
-
-To run in live development mode, run `wails dev` in the project directory. This will run a Vite development
-server that will provide very fast hot reload of your frontend changes. If you want to develop in a browser
-and have access to your Go methods, there is also a dev server that runs on http://localhost:34115. Connect
-to this in your browser, and you can call your Go code from devtools.
-
-## Building
-
-To build a redistributable, production mode package, use `wails build`.
+## TODO
+- [x] 实现基本压缩能力
+- [ ] 版本更新服务
+- [ ] 对压缩过的文件 不再处理
+- [ ] 拖拽支持zip
+- [ ] 拖拽/选择多个文件时，压缩后保存文件行为按文件夹格式处理

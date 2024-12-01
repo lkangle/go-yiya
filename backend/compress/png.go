@@ -6,6 +6,8 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
+	"syscall"
 	"time"
 	"yiya-v2/backend/types"
 	"yiya-v2/backend/utils"
@@ -34,6 +36,12 @@ func (j *pngLessener) Compress(input, output string, quality int) error {
 		"-o", output,
 		input,
 	)
+
+	if runtime.GOOS == "windows" {
+		cmd.SysProcAttr = &syscall.SysProcAttr{
+			HideWindow: true,
+		}
+	}
 
 	out, err := cmd.CombinedOutput()
 	if errors.Is(ctx.Err(), context.DeadlineExceeded) {
