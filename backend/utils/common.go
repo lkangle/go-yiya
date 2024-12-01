@@ -25,8 +25,8 @@ func GetPngquantFilename() string {
 	return ""
 }
 
-// GetPngquantFullPath 获取可执行文件完整路径
-func GetPngquantFullPath() string {
+// GetPngquantBinPath 获取可执行文件完整路径
+func GetPngquantBinPath() string {
 	home := GetYiHome()
 	pngquantPath := filepath.Join(home, GetPngquantFilename())
 

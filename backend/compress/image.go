@@ -2,7 +2,7 @@ package compress
 
 import (
 	"fmt"
-	"path"
+	"path/filepath"
 	"yiya-v2/backend/types"
 	"yiya-v2/backend/utils"
 )
@@ -40,21 +40,20 @@ func createLessener(image types.ImageFileInfo) lessener {
 	return nil
 }
 
-func DoCompress(image types.ImageFileInfo, option types.CompressOptions) (string, error) {
-	tempdir := utils.GetImageTempDir(image.Id)
-
-	tempOutput := path.Join(tempdir, "compress_image.data")
+// DoCompress 执行图片压缩，压缩成功则返回输出的压缩文件路径
+func DoCompress(image types.ImageFileInfo, quality int) (string, error) {
+	tempdir := utils.GetYiTempDir()
+	tempOutput := filepath.Join(tempdir, image.Id)
 
 	lesser := createLessener(image)
 	if lesser == nil {
 		return "", fmt.Errorf("不支持的图片类型: %s", image.ContentType)
 	}
 
-	err := lesser.Compress(image.Path, tempOutput, option.Quality)
+	err := lesser.Compress(image.Path, tempOutput, quality)
 	if err != nil {
 		return "", err
 	}
 
-	// TODO: 各种文件处理操作
 	return tempOutput, nil
 }

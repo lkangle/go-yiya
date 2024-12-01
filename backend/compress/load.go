@@ -18,7 +18,7 @@ func LoadPngquant() {
 		log.Println("read embed file fail: " + err.Error())
 		return
 	}
-	filepath := utils.GetPngquantFullPath()
+	filepath := utils.GetPngquantBinPath()
 
 	_, err = os.Stat(filepath)
 	if err == nil {
@@ -32,8 +32,8 @@ func LoadPngquant() {
 		return
 	}
 	defer file.Close()
-	_, err = io.Copy(file, bytes.NewBuffer(binBytes))
 
+	_, err = io.Copy(file, bytes.NewBuffer(binBytes))
 	if err != nil {
 		log.Println("copy file fail: " + err.Error())
 	} else {

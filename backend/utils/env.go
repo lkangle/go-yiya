@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"path"
+	"path/filepath"
 	"runtime"
 
 	"github.com/vrischmann/userdir"
@@ -10,11 +10,11 @@ import (
 var IsMacOS bool
 
 func GetYiHome() string {
-	return path.Join(userdir.GetConfigHome(), "YIYA_IG")
+	return filepath.Join(userdir.GetConfigHome(), "YIYA_IG")
 }
 
-func GetImageTempDir(id string) string {
-	return path.Join(GetYiHome(), "compress_temp", id)
+func GetYiTempDir() string {
+	return filepath.Join(GetYiHome(), "temp")
 }
 
 func init() {

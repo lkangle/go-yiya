@@ -3,7 +3,7 @@ package compress
 import (
 	"fmt"
 	"testing"
-	"yiya-v2/backend/types"
+	"yiya-v2/backend/consts"
 	"yiya-v2/backend/utils"
 )
 
@@ -12,9 +12,7 @@ func TestJp(t *testing.T) {
 
 	info := utils.GetBaseInfo(p)
 
-	out, err := DoCompress(info, types.CompressOptions{
-		Quality: 1,
-	})
+	out, err := DoCompress(info, consts.BEST_QUALITY)
 
 	if err != nil {
 		fmt.Println(err.Error())
@@ -30,4 +28,16 @@ func TestJp(t *testing.T) {
 
 func TestLoadPngquant(t *testing.T) {
 	LoadPngquant()
+}
+
+func TestCompress(t *testing.T) {
+	inp := "/Users/likangle/Desktop/MyProjects/image-bin/pngquant-c/bg1.png"
+	info := utils.GetBaseInfo(inp)
+
+	out, err := DoCompress(info, consts.BEST_QUALITY)
+
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	fmt.Println(out)
 }

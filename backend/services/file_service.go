@@ -2,7 +2,6 @@ package services
 
 import (
 	"os/exec"
-	"path/filepath"
 	"sync"
 	"yiya-v2/backend/compress"
 	"yiya-v2/backend/types"
@@ -70,10 +69,8 @@ func (fs *fileService) OpenSelectFilesDialog() (resp types.JSResp) {
 
 func (fs *fileService) OpenFile(path string) (resp types.JSResp) {
 	var cmd *exec.Cmd
-	dir := filepath.Dir(path)
 	if utils.IsMacOS {
-		// cmd = exec.Command("open", "-R", path)
-		cmd = exec.Command("open", dir)
+		cmd = exec.Command("open", "-R", path)
 	} else {
 		cmd = exec.Command("explorer", "/select,", path)
 	}
@@ -90,7 +87,7 @@ func (fs *fileService) OpenFile(path string) (resp types.JSResp) {
 }
 
 func (fs *fileService) CompressImage(input types.ImageFileInfo, opt types.CompressOptions) (res types.CompressResult) {
-	outPath, err := compress.DoCompress(input, opt)
+	outPath, err := compress.DoCompress(input, opt.Quality)
 
 	if err != nil {
 		res.Message = err.Error()
