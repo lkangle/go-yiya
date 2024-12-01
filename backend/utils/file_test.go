@@ -21,3 +21,10 @@ func TestParsePath(t *testing.T) {
 		fmt.Println(i.Filename, i.Path)
 	}
 }
+
+func TestCopyToTemp(t *testing.T) {
+	f := "/Users/likangle/Desktop/MyProjects/go-yiya/test.png"
+
+	o := CopyToTemp(f)
+	fmt.Println(o)
+}

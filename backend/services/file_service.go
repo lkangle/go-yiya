@@ -1,6 +1,7 @@
 package services
 
 import (
+	"os"
 	"os/exec"
 	"sync"
 	"yiya-v2/backend/compress"
@@ -86,21 +87,37 @@ func (fs *fileService) OpenFile(path string) (resp types.JSResp) {
 	return
 }
 
-func (fs *fileService) CompressImage(input types.ImageFileInfo, opt types.CompressOptions) (res types.CompressResult) {
-	outPath, err := compress.DoCompress(input, opt.Quality)
+func (f *fileService) CompressImage(input types.ImageFileInfo, opt types.CompressOptions) (res types.CompressResult) {
+	output, err := compress.DoCompress(input, opt.Quality)
 
 	if err != nil {
 		res.Message = err.Error()
 		res.Success = false
-	} else {
-		res.Success = true
-		res.Path = outPath
-		size := utils.GetSize(outPath)
-		res.Size = int(size)
+		return
 	}
+	res.Success = true
+	res.Size = utils.GetSize(output)
+	res.InputPath = input.Path
+
+	if opt.Override {
+		res.Path = input.Path
+		res.InputTempPath = utils.CopyToTemp(input.Path)
+	} else {
+		outpath := utils.GetOutputWithSuffix(input, opt.NewSuffix)
+		res.Path = outpath
+	}
+
+	err = utils.MoveFile(res.Path, output)
+	if err != nil {
+		res.Success = false
+		res.Message = err.Error()
+	}
+	// 删除文件 忽略错误
+	_ = os.Remove(output)
+
 	return
 }
 
-func (fs *fileService) RestoreImage(input types.ImageFileInfo) (resp types.JSResp) {
+func (f *fileService) RestoreImage(res types.CompressResult) (resp types.JSResp) {
 	return
 }

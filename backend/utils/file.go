@@ -1,6 +1,8 @@
 package utils
 
 import (
+	"fmt"
+	"io"
 	"io/fs"
 	"mime"
 	"net/http"
@@ -139,7 +141,12 @@ func parsePaths(paths []string, groupId string, list *types.ImageInfoList) {
 
 // ParseDropPaths 解析拖拽进来的路径 输出所有是图片的文件列表 可能存在文件夹 也可能有不支持的文件 都需要过滤
 func ParseDropPaths(paths []string) []types.ImageFileInfo {
-	groupId := uuid.NewString()
+	var groupId = ""
+	// 拖入的是包含多个文件的目录时 才存在组
+	if len(paths) > 1 {
+		groupId = uuid.NewString()
+	}
+
 	fileInfos := types.ImageInfoList{}
 
 	parsePaths(paths, groupId, &fileInfos)
@@ -157,4 +164,83 @@ func CreateFile(path string) (file *os.File, err error) {
 
 	file, err = os.Create(path)
 	return
+}
+
+// MoveFile 使用 io.Copy 来实现文件复制并删除源文件
+func MoveFile(dst, src string) error {
+	err := CopyFile(dst, src)
+	if err != nil {
+		return err
+	}
+
+	// 删除源文件
+	err = os.Remove(src)
+	if err != nil {
+		return fmt.Errorf("failed to remove source file: %w", err)
+	}
+	return nil
+}
+
+func CopyFile(dst, src string) error {
+	ipt, err := os.Open(src)
+	if err != nil {
+		return err
+	}
+	defer ipt.Close()
+
+	out, err := CreateFile(dst)
+	if err != nil {
+		return err
+	}
+	defer func() {
+		out.Close()
+		if err != nil {
+			os.Remove(dst)
+		}
+	}()
+
+	_, err = io.Copy(out, ipt)
+	return err
+}
+
+// 复制文件到临时目录下，并返回临时文件路径
+func CopyToTemp(input string) string {
+	f := filepath.Join(GetYiTempDir(), uuid.NewString())
+	err := CopyFile(f, input)
+	if err != nil {
+		return ""
+	}
+	return f
+}
+
+// getNewPathWithSuffix 根据输入路径和后缀返回新的路径
+func getNewPathWithSuffix(input, suffix string) string {
+	// 获取路径的基本文件名和扩展名
+	base := filepath.Base(input)
+	ext := filepath.Ext(base)
+
+	// 如果路径是文件，则在文件名的扩展名之前添加后缀
+	if ext != "" {
+		// 对文件路径进行处理：添加后缀
+		dir := filepath.Dir(input)
+		newBase := strings.TrimSuffix(base, ext) + "-" + suffix + ext
+		return filepath.Join(dir, newBase)
+	}
+
+	// 如果是目录，则直接在目录名后添加后缀
+	return input + "-" + suffix
+}
+
+func GetOutputWithSuffix(info types.ImageFileInfo, suffix string) string {
+	if suffix == "" {
+		suffix = "yiya"
+	}
+
+	// 带有组的 说明是拖拽的是整个目录
+	if info.GroupId != "" {
+		dir := filepath.Dir(info.Path)
+		return filepath.Join(getNewPathWithSuffix(dir, suffix), info.Filename)
+	}
+
+	return getNewPathWithSuffix(info.Path, suffix)
 }
