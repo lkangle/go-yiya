@@ -27,14 +27,18 @@ const select = () => {
   curStore.updateCurrent(item)
 }
 
-// 压缩后是不是变大了
-const isBig =  computed(() => {
-  return item.result.status === 3 && item.result.size != null && item.result.size > item.size
-})
 // 是不是被选中的
 const isSelected = computed(() => {
   let sid = curStore.current.id
   return sid === item.id
+})
+
+const errTitle = computed(() => {
+  let message = item.result.message
+  if (message.length > 20) {
+    return message
+  }
+  return ''
 })
 
 const open = async () => {
@@ -45,7 +49,7 @@ const open = async () => {
 <template>
     <div @click="select" class="img-item cursor-pointer h-45 flex items-center justify-between px-15 odd:bg-gray-50" :data-selected="isSelected">
         <div className="status-icon flex items-center justify-center">
-            <i :data-status="status" :data-big="isBig"/>
+            <i :data-status="status"/>
         </div>
         <div class="w-35 h-35 rounded-[5px] overflow-hidden mx-12 flex items-center justify-center">
           <Image class="object-contain w-full h-full" :src="item.path"/>
@@ -59,16 +63,13 @@ const open = async () => {
                 <span>压缩中...</span>
             </p>
             <p v-if="status===3" class="text-10 text-gray-400">
-                <span :class="['mr-4', {
-                  'text-green-500': !isBig,
-                  'text-yellow-600': isBig
-                }]">{{ lessRate(item, item.result) }}</span>
+                <span class="mr-4 text-green-500">{{ lessRate(item, item.result) }}</span>
                 <span>{{ formatFileSize(item.size) }}</span>
                 <ArrowRightOutlined class="scale-75 pt-1 mx-2"/>
                 <span>{{ formatFileSize(item.result.size) }}</span>
             </p>
-            <p v-if="status===4" class="text-10 text-red-600">
-                <span>压缩失败</span>
+            <p :title="errTitle" v-if="status===4" class="text-10 text-red-600 max-w-200 truncate">
+                <span>{{item.result.message||"压缩失败"}}</span>
             </p>
         </div>
         <div class="flex space-x-2 scale-75 -mr-10">
@@ -129,10 +130,6 @@ const open = async () => {
       /* 成功 */
       &[data-status='3'] {
         @apply bg-green-500;
-
-        &[data-big='true'] {
-          @apply !bg-yellow-600;
-        }
       }
       
       /* 失败 */

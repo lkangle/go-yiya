@@ -7,10 +7,10 @@ import (
 
 func TestMime(t *testing.T) {
 	fmt.Printf("vaild, jpg %t, png %t, webp %t, svg %t/n",
-		IsVaildImage("bigtitle_1@2x.jpg"),
-		IsVaildImage("bigtitle_1@2x.png"),
-		IsVaildImage("bigtitle_1@2x.webp"),
-		IsVaildImage("bigtitle_1@2x.svg"))
+		IsValidImage("bigtitle_1@2x.jpg"),
+		IsValidImage("bigtitle_1@2x.png"),
+		IsValidImage("bigtitle_1@2x.webp"),
+		IsValidImage("bigtitle_1@2x.svg"))
 
 }
 
@@ -27,4 +27,15 @@ func TestCopyToTemp(t *testing.T) {
 
 	o := CopyToTemp(f)
 	fmt.Println(o)
+}
+
+func TestParseDropPaths(t *testing.T) {
+	infos := ParseDropPaths([]string{
+		"C:\\Users\\likangle\\Desktop\\房间赛资格任务",
+	})
+
+	for _, inf := range infos {
+		out := GetOutputWithSuffix(inf, "")
+		fmt.Println(inf.Path, out)
+	}
 }

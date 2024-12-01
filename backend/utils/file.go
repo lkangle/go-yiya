@@ -31,7 +31,7 @@ func DetectContentType(path string) (string, error) {
 	return http.DetectContentType(buffer), nil
 }
 
-func IsVaildImage(filePath string) bool {
+func IsValidImage(filePath string) bool {
 	info, err := os.Lstat(filePath)
 	if err != nil {
 		return false
@@ -93,18 +93,18 @@ func GetBaseInfo(path string) types.ImageFileInfo {
 	return info
 }
 
-func appendList(path, groupId string, list types.ImageInfoList) types.ImageInfoList {
-	vaild := IsVaildImage(path)
+func appendList(path, rootDir string, list []types.ImageFileInfo) []types.ImageFileInfo {
+	valid := IsValidImage(path)
 
-	if vaild {
+	if valid {
 		base := GetBaseInfo(path)
-		base.GroupId = groupId
+		base.DirPath = rootDir
 		return append(list, base)
 	}
 	return list
 }
 
-func walk(root, groupId string, list *types.ImageInfoList) {
+func walk(root, rootDir string, list *[]types.ImageFileInfo) {
 	_ = filepath.WalkDir(root, func(path string, d fs.DirEntry, err error) error {
 		// 忽略错误
 		if err != nil {
@@ -116,45 +116,32 @@ func walk(root, groupId string, list *types.ImageInfoList) {
 		}
 
 		if d.IsDir() {
-			walk(path, groupId, list)
+			walk(path, rootDir, list)
 		} else {
-			*list = appendList(path, groupId, *list)
+			*list = appendList(path, rootDir, *list)
 		}
 		return nil
 	})
 }
 
-func parsePaths(paths []string, groupId string, list *types.ImageInfoList) {
+// ParseDropPaths 解析拖拽进来的路径 输出所有是图片的文件列表 可能存在文件夹 也可能有不支持的文件 都需要过滤
+func ParseDropPaths(paths []string) []types.ImageFileInfo {
+	list := new([]types.ImageFileInfo)
+
 	for _, path := range paths {
-		stat, err := os.Stat(path)
+		info, err := os.Stat(path)
 		// 有错就跳过
 		if err != nil {
 			continue
 		}
-		if stat.IsDir() {
-			walk(path, groupId, list)
+		if info.IsDir() {
+			walk(path, path, list)
 		} else {
-			*list = appendList(path, groupId, *list)
+			*list = appendList(path, "", *list)
 		}
 	}
-}
 
-// ParseDropPaths 解析拖拽进来的路径 输出所有是图片的文件列表 可能存在文件夹 也可能有不支持的文件 都需要过滤
-// - 拖进来一个文件夹
-// - 拖进来多个文件夹
-// - 拖进来过个文件，包括文件夹和文件
-func ParseDropPaths(paths []string) []types.ImageFileInfo {
-	var groupId = ""
-	// 拖入的是包含多个文件的目录时 才存在组
-	if len(paths) > 1 {
-		groupId = uuid.NewString()
-	}
-
-	fileInfos := types.ImageInfoList{}
-
-	parsePaths(paths, groupId, &fileInfos)
-
-	return fileInfos
+	return *list
 }
 
 func CreateFile(path string) (file *os.File, err error) {
@@ -206,7 +193,7 @@ func CopyFile(dst, src string) error {
 	return err
 }
 
-// 复制文件到临时目录下，并返回临时文件路径
+// CopyToTemp 复制文件到临时目录下，并返回临时文件路径
 func CopyToTemp(input string) string {
 	f := filepath.Join(GetYiTempDir(), uuid.NewString())
 	err := CopyFile(f, input)
@@ -239,10 +226,14 @@ func GetOutputWithSuffix(info types.ImageFileInfo, suffix string) string {
 		suffix = "yiya"
 	}
 
-	// 带有组的 说明是拖拽的是整个目录
-	if info.GroupId != "" {
-		dir := filepath.Dir(info.Path)
-		return filepath.Join(getNewPathWithSuffix(dir, suffix), info.Filename)
+	if info.DirPath != "" {
+		dir := info.DirPath
+		relPath, err := filepath.Rel(dir, info.Path)
+		if err != nil {
+			return ""
+		}
+		suffixDir := getNewPathWithSuffix(dir, suffix)
+		return filepath.Join(suffixDir, relPath)
 	}
 
 	return getNewPathWithSuffix(info.Path, suffix)

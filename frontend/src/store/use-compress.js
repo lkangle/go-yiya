@@ -9,12 +9,12 @@ const useCompress = () => {
     const optStore = useOptions()
 
     const emitCompress = async (item, onProgress) => {
-        limit(async () => {
+        await limit(async () => {
             onProgress({status: 2})
 
             let [r, err] = await withError(CompressImage(item, optStore.data))
             if (err != null || !r.success) {
-                onProgress({ status: 4, message: r.message||err.message})
+                onProgress({ ...r, status: 4, message: r.message||err.message})
             } else {
                 onProgress({...r, status: 3})
             }

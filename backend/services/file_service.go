@@ -1,6 +1,7 @@
 package services
 
 import (
+	"errors"
 	"os"
 	"os/exec"
 	"sync"
@@ -39,8 +40,8 @@ func (f *fileService) ParseFilePaths(paths []string) []types.ImageFileInfo {
 	return list
 }
 
-func (fs *fileService) OpenSelectFilesDialog() (resp types.JSResp) {
-	fileList, err := runtime.OpenMultipleFilesDialog(fs.ctx, runtime.OpenDialogOptions{
+func (f *fileService) OpenSelectFilesDialog() (resp types.JSResp) {
+	fileList, err := runtime.OpenMultipleFilesDialog(f.ctx, runtime.OpenDialogOptions{
 		DefaultFilename:            "",
 		Title:                      "选择图片进行压缩",
 		ShowHiddenFiles:            false,
@@ -68,7 +69,7 @@ func (fs *fileService) OpenSelectFilesDialog() (resp types.JSResp) {
 	return
 }
 
-func (fs *fileService) OpenFile(path string) (resp types.JSResp) {
+func (f *fileService) OpenFile(path string) (resp types.JSResp) {
 	var cmd *exec.Cmd
 	if utils.IsMacOS {
 		cmd = exec.Command("open", "-R", path)
@@ -89,25 +90,29 @@ func (fs *fileService) OpenFile(path string) (resp types.JSResp) {
 
 func (f *fileService) CompressImage(input types.ImageFileInfo, opt types.CompressOptions) (res types.CompressResult) {
 	output, err := compress.DoCompress(input, opt.Quality)
-
 	if err != nil {
 		res.Message = err.Error()
 		res.Success = false
 		return
 	}
+
 	res.Success = true
 	res.Size = utils.GetSize(output)
 	res.InputPath = input.Path
 
-	if opt.Override {
-		res.Path = input.Path
-		res.InputTempPath = utils.CopyToTemp(input.Path)
+	if res.Size > input.Size {
+		err = errors.New("无效压缩，尺寸变大！")
+		res.Code = 1055
 	} else {
-		outpath := utils.GetOutputWithSuffix(input, opt.NewSuffix)
-		res.Path = outpath
+		if opt.Override {
+			res.Path = input.Path
+			res.InputTempPath = utils.CopyToTemp(input.Path)
+		} else {
+			res.Path = utils.GetOutputWithSuffix(input, opt.NewSuffix)
+		}
+		err = utils.MoveFile(res.Path, output)
 	}
 
-	err = utils.MoveFile(res.Path, output)
 	if err != nil {
 		res.Success = false
 		res.Message = err.Error()

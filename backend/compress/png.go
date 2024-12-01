@@ -36,7 +36,7 @@ func (j *pngLessener) Compress(input, output string, quality int) error {
 	)
 
 	out, err := cmd.CombinedOutput()
-	if ctx.Err() == context.DeadlineExceeded {
+	if errors.Is(ctx.Err(), context.DeadlineExceeded) {
 		return ctx.Err()
 	}
 	outstr := string(out)
