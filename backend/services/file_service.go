@@ -124,5 +124,16 @@ func (f *fileService) CompressImage(input types.ImageFileInfo, opt types.Compres
 }
 
 func (f *fileService) RestoreImage(res types.CompressResult) (resp types.JSResp) {
+	var err error = nil
+	if res.InputTempPath != "" {
+		err = utils.MoveFile(res.InputPath, res.InputTempPath)
+	} else {
+		err = os.Remove(res.Path)
+	}
+
+	resp.Success = true
+	if err != nil {
+		resp.Success = false
+	}
 	return
 }

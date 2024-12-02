@@ -1,13 +1,28 @@
-export function debounce(fn, delay) {
-    let timeout
-    return function (...args) {
-        clearTimeout(timeout)
+export function debounce(fn, delay, leading = false) {
+    let timer = null;
+    let hasLeadingCalled = false;
 
-        timeout = setTimeout(() => {
-            fn(...args)
-        }, delay)
-    }
+    return function (...args) {
+        const context = this;
+
+        if (leading && !hasLeadingCalled) {
+            // 如果需要立即执行，并且尚未执行过
+            fn.apply(context, args);
+            hasLeadingCalled = true;
+        }
+
+        clearTimeout(timer); // 清除上一次的定时器
+
+        timer = setTimeout(() => {
+            if (!leading) {
+                // 如果不是 leading 模式，延迟结束后调用
+                fn.apply(context, args);
+            }
+            hasLeadingCalled = false; // 重置为初始状态
+        }, delay);
+    };
 }
+
 
 export function range(start, end) {
     return new Array(end-start).fill(0).map((_, index) => index+start)

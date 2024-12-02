@@ -16,8 +16,8 @@ const useOptions = defineStore("compress-options",  () => {
         }
     })
 
-    const save = debounce((data) => {
-        UpdateCompressOptions(data)
+    const save = debounce(async (data) => {
+        await UpdateCompressOptions(data)
     }, 500);
 
     return { data, save }

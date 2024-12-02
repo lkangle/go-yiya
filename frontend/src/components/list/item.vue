@@ -42,7 +42,11 @@ const errTitle = computed(() => {
 })
 
 const open = async () => {
-  await OpenFile(item.path)
+    let path = item.path
+    if (item.result.status===3) {
+        path = item.result.path
+    }
+    await OpenFile(path)
 }
 </script>
 
@@ -70,6 +74,9 @@ const open = async () => {
             </p>
             <p :title="errTitle" v-if="status===4" class="text-10 text-red-600 max-w-200 truncate">
                 <span>{{item.result.message||"压缩失败"}}</span>
+            </p>
+            <p v-if="status===5" class="text-10 text-blue-500">
+                <span>已还原，可重压</span>
             </p>
         </div>
         <div class="flex space-x-2 scale-75 -mr-10">
