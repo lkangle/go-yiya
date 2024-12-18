@@ -38,5 +38,6 @@ func LoadPngquant() {
 		log.Println("copy file fail: " + err.Error())
 	} else {
 		log.Println("copy file success: " + filepath)
+		os.Chmod(filepath, os.ModePerm)
 	}
 }
